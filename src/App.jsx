@@ -1,7 +1,9 @@
+import { Header } from "./components/layout/general/Header";
+
 function App() {
   return (
     <div className="layout">
-      <h1>Proyecto Red Social </h1>
+      <Header />
     </div>
   );
 }
