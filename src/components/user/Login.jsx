@@ -26,6 +26,8 @@ export const Login = () => {
       //Persister los datos en el navegador
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
+      
+      setSaved("login");
     } else {
       setSaved("error");
     }
