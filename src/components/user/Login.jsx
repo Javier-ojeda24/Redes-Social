@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForms } from "../../hooks/useForms";
+import { Global } from "../../helpers/Glogal";
 
 export const Login = () => {
   const { forms, changed } = useForms({});
+  const [saved, setSaved] = useState("not-sended");
 
   const loginUser = async (e) => {
     e.preventDefault();
@@ -10,11 +12,23 @@ export const Login = () => {
     //Los datos del formulario
     let userToLogin = forms;
 
-    //La peticion al back 
+    //La peticion al back
+    const request = await fetch(Global.url + "user/login", {
+      method: "POST",
+      body: JSON.stringify(userToLogin),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await request.json();
 
-
-    //Persister los datos en el navegador
-    
+    if (data.status === "success") {
+      //Persister los datos en el navegador
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+    } else {
+      setSaved("error");
+    }
   };
 
   return (
@@ -23,6 +37,22 @@ export const Login = () => {
         <h1 className="content__title">Login</h1>
       </header>
       <div className="content__posts">
+        {saved === "login" ? (
+          <strong className="alert alert-success">
+            Usuario identificado correctamente !!{" "}
+          </strong>
+        ) : (
+          ""
+        )}
+
+        {saved === "error" ? (
+          <strong className="alert alert-danger">
+            Usuario no se ha identificado !!
+          </strong>
+        ) : (
+          ""
+        )}
+
         <form className="for-login" onSubmit={loginUser}>
           <div className="form-group">
             <label htmlFor="email">Email</label>
