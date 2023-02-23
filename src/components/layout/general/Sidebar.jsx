@@ -4,7 +4,8 @@ import { Global } from "../../../helpers/Glogal";
 import useAuth from "../../../hooks/useAuth";
 
 export const Sidebar = () => {
-  const { auth } = useAuth();
+  const { auth, counters } = useAuth();
+  // console.log(counters);
 
   return (
     <aside className="layout__aside">
@@ -45,20 +46,20 @@ export const Sidebar = () => {
             <div className="stats__following">
               <a href="#" className="following__link">
                 <span className="following__title">Siguiendo</span>
-                <span className="following__number">10</span>
+                <span className="following__number">{counters.following}</span>
               </a>
             </div>
             <div className="stats__following">
               <a href="#" className="following__link">
                 <span className="following__title">Seguidores</span>
-                <span className="following__number">13</span>
+                <span className="following__number">{counters.followed}</span>
               </a>
             </div>
 
             <div className="stats__following">
               <a href="#" className="following__link">
                 <span className="following__title">Publicaciones</span>
-                <span className="following__number">17</span>
+                <span className="following__number">{counters.publications}</span>
               </a>
             </div>
           </div>
