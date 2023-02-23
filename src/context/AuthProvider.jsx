@@ -1,16 +1,49 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
+import { Global } from "../helpers/Glogal";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [compartido, setCompartido] = useState(
-    "Compartida en todo los componentes"
-  );
+  const [auth, setAuth] = useState({});
+
+  useEffect(() => {
+    authUser();
+  }, []);
+
+  const authUser = async () => {
+    //Sacar datos del usuario identificado del local storage
+    const token = localStorage.getItem("token");
+    const user = localStorage.getItem("user");
+
+    //Comprobar si tengo el token y el user
+    if (!token || !user) {
+      return false;
+    }
+
+    //Transformar los datos a un objeto de js
+    const userObj = JSON.parse(user);
+    const userId = userObj.id;
+
+    //Peticion ajax que compruebe el token
+    const request = await fetch(Global.url + "user/profile/" + userId, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": token,
+      },
+    });
+
+    //Que me devuelva todos los datos del usuario
+    const data = await request.json();
+    //Setear el estado de auth
+    setAuth(data.user);
+  };
 
   return (
     <AuthContext.Provider
       value={{
-        compartido,
+        auth,
+        setAuth,
       }}
     >
       {children}

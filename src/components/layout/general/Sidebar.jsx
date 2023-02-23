@@ -1,29 +1,43 @@
 import React from "react";
-import avatar from "../../../assets/img/user.png"
+import avatar from "../../../assets/img/user.png";
+import { Global } from "../../../helpers/Glogal";
+import useAuth from "../../../hooks/useAuth";
 
 export const Sidebar = () => {
+  const { auth } = useAuth();
+
   return (
     <aside className="layout__aside">
       <header className="aside__header">
-        <h1 className="aside__title">Hola, Victor</h1>
+        <h1 className="aside__title">Hola, {auth.name} </h1>
       </header>
 
       <div className="aside__container">
         <div className="aside__profile-info">
           <div className="profile-info__general-info">
             <div className="general-info__container-avatar">
-              <img
-                src={avatar}
-                className="container-avatar__img"
-                alt="Foto de perfil"
-              />
+              {auth.image != "default.png" && (
+                <img
+                  src={Global.url + "user/avatar/" + auth.image}
+                  className="container-avatar__img"
+                  alt="Foto de perfil"
+                />
+              )}
+
+              {auth.image == "default.png" && (
+                <img
+                  src={avatar}
+                  className="container-avatar__img"
+                  alt="Foto de perfil"
+                />
+              )}
             </div>
 
             <div className="general-info__container-names">
               <a href="#" className="container-names__name">
-                Victor Robles
+                {auth.name} {auth.surname}
               </a>
-              <p className="container-names__nickname">VictorWeb</p>
+              <p className="container-names__nickname">{auth.nick} </p>
             </div>
           </div>
 
@@ -53,14 +67,14 @@ export const Sidebar = () => {
         <div className="aside__container-form">
           <form className="container-form__form-post">
             <div className="form-post__inputs">
-              <label for="post" className="form-post__label">
+              <label htmlFor="post" className="form-post__label">
                 ¿Que estas pesando hoy?
               </label>
               <textarea name="post" className="form-post__textarea"></textarea>
             </div>
 
             <div className="form-post__inputs">
-              <label for="image" className="form-post__label">
+              <label htmlFor="image" className="form-post__label">
                 Sube tu foto
               </label>
               <input type="file" name="image" className="form-post__image" />
