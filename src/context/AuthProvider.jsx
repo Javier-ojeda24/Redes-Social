@@ -6,6 +6,7 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState({});
   const [counters, setCounters] = useState({});
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     authUser();
@@ -30,7 +31,7 @@ export const AuthProvider = ({ children }) => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": token,
+        Authorization: token,
       },
     });
 
@@ -44,7 +45,7 @@ export const AuthProvider = ({ children }) => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": token,
+          Authorization: token,
         },
       }
     );
@@ -55,6 +56,7 @@ export const AuthProvider = ({ children }) => {
     //Setear el estado de auth
     setAuth(data.user);
     setCounters(dataCounters);
+    setLoading(false);
   };
 
   return (
@@ -63,6 +65,7 @@ export const AuthProvider = ({ children }) => {
         auth,
         setAuth,
         counters,
+        loading,
       }}
     >
       {children}
