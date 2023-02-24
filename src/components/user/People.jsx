@@ -4,13 +4,14 @@ import { Global } from "../../helpers/Glogal";
 
 export const People = () => {
   const [users, setUser] = useState([]);
+  const [pages, setPages] = useState(1);
   useEffect(() => {
     getUser();
   }, []);
 
   const getUser = async () => {
     //Peticion para sacar usuarios
-    const request = await fetch(Global.url + "user/list/1", {
+    const request = await fetch(Global.url + "user/list/" + pages, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -21,10 +22,21 @@ export const People = () => {
 
     //Crear un estado para poder listarlos
     if (data.users && data.status == "success") {
-      setUser(data.users);
+      let newUser = data.users;
+      if(users.length >=1){
+        newUser=[...users, ...data.users]
+      }
+      setUser(newUser);
     }
 
     //Paginacion
+  };
+
+  const nextPage = () => {
+    let next = pages + 1;
+    setPages(next);
+    getUser();
+    console.log(pages, users);
   };
   return (
     <>
@@ -88,7 +100,9 @@ export const People = () => {
         })}
       </div>
       <div className="content__container-btn">
-        <button className="content__btn-more-post">Ver mas personas</button>
+        <button className="content__btn-more-post" onClick={nextPage}>
+          Ver mas personas
+        </button>
       </div>
     </>
   );
