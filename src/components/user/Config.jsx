@@ -13,6 +13,8 @@ export const Config = () => {
     //Recoger datos del formulario
     let newDataUser = SerializeForm(e.target);
 
+    //Token de autentificacion
+    const token = localStorage.getItem("token");
     //Borrar propiedad innecesaria
     delete newDataUser.file0;
 
@@ -22,17 +24,43 @@ export const Config = () => {
       body: JSON.stringify(newDataUser),
       headers: {
         "Content-Type": "application/json",
-        "Authorization": localStorage.getItem("token"),
+        Authorization: token,
       },
     });
-    const data = await request.json()
-    if(data.status == "success"){
-      delete data.user.password
-      setAuth(data.user)
-      setSaved("saved")
+    const data = await request.json();
+    if (data.status == "success" && data.user) {
+      delete data.user.password;
+      setAuth(data.user);
+      setSaved("saved");
+    } else {
+      setSaved("error");
+    }
 
-    }else{
-      setSaved("error")
+    //Subida de imagen
+    const fileInput = document.querySelector("#file");
+
+    if (data.status == "success" && fileInput.files[0]) {
+      //Recoger imagen a subir
+      const formData = new FormData();
+      formData.append("file0", fileInput.files[0]);
+
+      //Peticion para enviar la imagen
+      const uploadRequest = await fetch(Global.url + "user/upload", {
+        method: "POST",
+        body: formData,
+        headers: {
+          Authorization: token,
+        },
+      });
+      const uploadData = await uploadRequest.json();
+
+      if (uploadData.status == "success" && uploadData.user) {
+        delete uploadData.user.password;
+        setAuth(uploadData.user);
+        setSaved("saved");
+      } else {
+        setSaved("error");
+      }
     }
   };
   return (
@@ -112,6 +140,8 @@ export const Config = () => {
           <br />
           <input type="submit" value="Actualizar" className="btn btn-success" />
         </form>
+
+        <br />
       </div>
     </>
   );
