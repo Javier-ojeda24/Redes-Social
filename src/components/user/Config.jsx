@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Global } from "../../helpers/Glogal";
 import useAuth from "../../hooks/useAuth";
 import avatar from "../../assets/img/user.png";
+import { SerializeForm } from "../../helpers/SerializeForm";
 
 export const Config = () => {
   const [saved, setSaved] = useState("not-saved");
@@ -9,6 +10,14 @@ export const Config = () => {
 
   const updateUser = (e) => {
     e.preventDefault();
+    //Recoger datos del formulario
+    let newDataUser = SerializeForm;
+
+    //Borrar propiedad innecesaria
+    delete newDataUser.file0;
+
+    //Actualizar usuario en la base de datos
+    
   };
   return (
     <>
