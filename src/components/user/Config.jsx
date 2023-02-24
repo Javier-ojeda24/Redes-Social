@@ -6,18 +6,34 @@ import { SerializeForm } from "../../helpers/SerializeForm";
 
 export const Config = () => {
   const [saved, setSaved] = useState("not-saved");
-  const { auth } = useAuth();
+  const { auth, setAuth } = useAuth();
 
-  const updateUser = (e) => {
+  const updateUser = async (e) => {
     e.preventDefault();
     //Recoger datos del formulario
-    let newDataUser = SerializeForm;
+    let newDataUser = SerializeForm(e.target);
 
     //Borrar propiedad innecesaria
     delete newDataUser.file0;
 
     //Actualizar usuario en la base de datos
-    
+    const request = await fetch(Global.url + "user/update", {
+      method: "PUT",
+      body: JSON.stringify(newDataUser),
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": localStorage.getItem("token"),
+      },
+    });
+    const data = await request.json()
+    if(data.status == "success"){
+      delete data.user.password
+      setAuth(data.user)
+      setSaved("saved")
+
+    }else{
+      setSaved("error")
+    }
   };
   return (
     <>
