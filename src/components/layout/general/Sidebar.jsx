@@ -59,7 +59,9 @@ export const Sidebar = () => {
             <div className="stats__following">
               <a href="#" className="following__link">
                 <span className="following__title">Publicaciones</span>
-                <span className="following__number">{counters.publications}</span>
+                <span className="following__number">
+                  {counters.publications}
+                </span>
               </a>
             </div>
           </div>
