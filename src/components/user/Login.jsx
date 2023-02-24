@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { useForms } from "../../hooks/useForms";
 import { Global } from "../../helpers/Glogal";
+import useAuth from "../../hooks/useAuth";
 
 export const Login = () => {
   const { forms, changed } = useForms({});
   const [saved, setSaved] = useState("not-sended");
+  const { setAuth } = useAuth();
 
   const loginUser = async (e) => {
     e.preventDefault();
@@ -26,8 +28,14 @@ export const Login = () => {
       //Persister los datos en el navegador
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
-      
+
       setSaved("login");
+      //Setear datos en el auth
+      setAuth(data.user);
+      //Redireccion
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     } else {
       setSaved("error");
     }

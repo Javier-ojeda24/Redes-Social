@@ -135,7 +135,7 @@ body {
 
 /*ESTILOS DE CONTENIDO*/
 .layout__content {
-  grid-area: content;
+  /* grid-area: content; */
   padding: 0 1.5rem;
 }
 
