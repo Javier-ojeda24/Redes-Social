@@ -5,11 +5,12 @@ import { Global } from "../../helpers/Glogal";
 export const People = () => {
   const [users, setUser] = useState([]);
   const [pages, setPages] = useState(1);
+  const [more, setMore] = useState(true);
   useEffect(() => {
-    getUser();
+    getUser(1);
   }, []);
 
-  const getUser = async (nextPage) => {
+  const getUser = async (nextPage = 1) => {
     //Peticion para sacar usuarios
     const request = await fetch(Global.url + "user/list/" + nextPage, {
       method: "GET",
@@ -23,13 +24,17 @@ export const People = () => {
     //Crear un estado para poder listarlos
     if (data.users && data.status == "success") {
       let newUser = data.users;
-      if(users.length >=1){
-        newUser=[...users, ...data.users]
+      if (users.length >= 1) {
+        newUser = [...users, ...data.users];
       }
       setUser(newUser);
     }
 
     //Paginacion
+    // console.log(data);
+    if (users.length >= data.total) {
+      setMore(false);
+    }
   };
 
   const nextPage = () => {
@@ -98,11 +103,14 @@ export const People = () => {
           );
         })}
       </div>
-      <div className="content__container-btn">
-        <button className="content__btn-more-post" onClick={nextPage}>
-          Ver mas personas
-        </button>
-      </div>
+
+      {more && (
+        <div className="content__container-btn">
+          <button className="content__btn-more-post" onClick={nextPage}>
+            Ver mas personas
+          </button>
+        </div>
+      )}
     </>
   );
 };
