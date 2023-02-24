@@ -1,4 +1,5 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
 import avatar from "../../../assets/img/user.png";
 
 export const Nav = () => {
@@ -50,10 +51,10 @@ export const Nav = () => {
           </a>
         </li>
         <li className="list-end__item">
-          <a href="#" className="list-end__link">
+          <NavLink to="/social/logout" className="list-end__link">
             <i className="fa-solid fa-arrow-right-from-bracket"></i>
             <span className="list-end__name">Cerrar sessión</span>
-          </a>
+          </NavLink>
         </li>
       </ul>
     </nav>
