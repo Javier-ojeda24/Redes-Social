@@ -38,7 +38,7 @@ export const People = () => {
 
     //Paginacion
     // console.log(data);
-    if (users.length >= data.total) {
+    if (users.length >= (data.total - data.users.length)) {
       setMore(false);
     }
   };
