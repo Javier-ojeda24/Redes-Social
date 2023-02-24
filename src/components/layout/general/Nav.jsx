@@ -1,8 +1,12 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import avatar from "../../../assets/img/user.png";
+import { Global } from "../../../helpers/Glogal";
+import useAuth from "../../../hooks/useAuth";
 
 export const Nav = () => {
+  const { auth } = useAuth();
+
   return (
     <nav className="navbar__container-lists">
       <ul className="container-lists__menu-list">
@@ -31,21 +35,31 @@ export const Nav = () => {
       <ul className="container-lists__list-end">
         <li className="list-end__item">
           <a href="#" className="list-end__link-image">
-            <img
-              src={avatar}
-              className="list-end__img"
-              alt="Imagen de perfil"
-            />
+            {auth.image != "default.png" && (
+              <img
+                src={Global.url + "user/avatar/" + auth.image}
+                className="list-end__img"
+                alt="Foto de perfil"
+              />
+            )}
+
+            {auth.image == "default.png" && (
+              <img
+                src={avatar}
+                className="list-end__img"
+                alt="Foto de perfil"
+              />
+            )}
           </a>
         </li>
         <li className="list-end__item">
           <a href="#" className="list-end__link">
-            <span className="list-end__name">Name</span>
+            <span className="list-end__name">{auth.nick}</span>
           </a>
         </li>
 
         <li className="list-end__item">
-        <NavLink to="/social/ajustes" className="list-end__link">
+          <NavLink to="/social/ajustes" className="list-end__link">
             <i className="fa-solid fa-gear"></i>
             <span className="list-end__name">Ajustes</span>
           </NavLink>
