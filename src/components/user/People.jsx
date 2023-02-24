@@ -7,6 +7,7 @@ export const People = () => {
   const [pages, setPages] = useState(1);
   const [more, setMore] = useState(true);
   const [loading, setLoading] = useState(true);
+  const [following, setFollowind] = useState([]);
 
   useEffect(() => {
     getUser(1);
@@ -31,6 +32,7 @@ export const People = () => {
         newUser = [...users, ...data.users];
       }
       setUser(newUser);
+      setFollowind(data.user_following);
       setLoading(false);
     }
 
@@ -45,6 +47,7 @@ export const People = () => {
     let next = pages + 1;
     setPages(next);
     getUser(next);
+    // console.log(following);
   };
   return (
     <>
@@ -92,17 +95,21 @@ export const People = () => {
                 </div>
               </div>
 
-              <div className="post__buttons">
-                <a href="#" className="post__button post__button--green">
-                  Seguir
-                </a>
-              </div>
+              { !following.includes(user._id) && (
+                <div className="post__buttons">
+                  <a href="#" className="post__button post__button--green">
+                    Seguir
+                  </a>
+                </div>
+              )}
 
-              {/* <div className="post__buttons">
-            <a href="#" className="post__button">
-              Dejar de seguir
-            </a>
-          </div> */}
+              {following.includes(user._id) && (
+                <div className="post__buttons">
+                  <a href="#" className="post__button">
+                    Dejar de seguir
+                  </a>
+                </div>
+              )}
             </article>
           );
         })}
