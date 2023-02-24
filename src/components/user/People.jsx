@@ -6,11 +6,14 @@ export const People = () => {
   const [users, setUser] = useState([]);
   const [pages, setPages] = useState(1);
   const [more, setMore] = useState(true);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     getUser(1);
   }, []);
 
   const getUser = async (nextPage = 1) => {
+    setLoading(true);
     //Peticion para sacar usuarios
     const request = await fetch(Global.url + "user/list/" + nextPage, {
       method: "GET",
@@ -28,6 +31,7 @@ export const People = () => {
         newUser = [...users, ...data.users];
       }
       setUser(newUser);
+      setLoading(false);
     }
 
     //Paginacion
@@ -103,6 +107,7 @@ export const People = () => {
           );
         })}
       </div>
+      {loading ? "Cargando..." : ""}
 
       {more && (
         <div className="content__container-btn">
