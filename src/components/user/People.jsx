@@ -9,9 +9,9 @@ export const People = () => {
     getUser();
   }, []);
 
-  const getUser = async () => {
+  const getUser = async (nextPage) => {
     //Peticion para sacar usuarios
-    const request = await fetch(Global.url + "user/list/" + pages, {
+    const request = await fetch(Global.url + "user/list/" + nextPage, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -35,8 +35,7 @@ export const People = () => {
   const nextPage = () => {
     let next = pages + 1;
     setPages(next);
-    getUser();
-    console.log(pages, users);
+    getUser(next);
   };
   return (
     <>
