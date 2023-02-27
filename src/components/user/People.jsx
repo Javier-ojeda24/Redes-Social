@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import avatar from "../../assets/img/user.png";
 import { Global } from "../../helpers/Glogal";
+import useAuth from "../../hooks/useAuth";
 
 export const People = () => {
   const [users, setUser] = useState([]);
@@ -8,6 +9,7 @@ export const People = () => {
   const [more, setMore] = useState(true);
   const [loading, setLoading] = useState(true);
   const [following, setFollowind] = useState([]);
+  const { auth } = useAuth();
 
   useEffect(() => {
     getUser(1);
@@ -131,18 +133,18 @@ export const People = () => {
                   <h4 className="post__content">{user.bio}</h4>
                 </div>
               </div>
-
-              {!following.includes(user._id) && (
+              {user._id != auth._id && (
                 <div className="post__buttons">
-                  <button
-                    className="post__button post__button--green"
-                    onClick={() => follow(user._id)}
-                  >
-                    Seguir
-                  </button>
+                  {!following.includes(user._id) && (
+                    <button
+                      className="post__button post__button--green"
+                      onClick={() => follow(user._id)}
+                    >
+                      Seguir
+                    </button>
+                  )}
                 </div>
               )}
-
               {following.includes(user._id) && (
                 <div className="post__buttons">
                   <button
