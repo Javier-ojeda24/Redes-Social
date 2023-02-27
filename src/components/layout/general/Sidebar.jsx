@@ -1,13 +1,39 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import avatar from "../../../assets/img/user.png";
 import { Global } from "../../../helpers/Glogal";
 import useAuth from "../../../hooks/useAuth";
+import { useForms } from "../../../hooks/useForms";
 
 export const Sidebar = () => {
   const { auth, counters } = useAuth();
-  // console.log(counters);
+  const { forms, changed } = useForms({});
+  const [saved, setSaved] = useState("not-saved");
 
+  const savePublication = async (e) => {
+    e.preventDefault();
+    //Recoger datos del formulario
+    let newPublication = forms;
+    newPublication.user = auth._id;
+
+    //Hacer request para guardar en db
+    const request = await fetch(Global.url + "publication/save", {
+      method: "POST",
+      body: JSON.stringify(newPublication),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: localStorage.getItem("token"),
+      },
+    });
+    const data = await request.json();
+
+    //Mostrar mensaje de exito o error
+    if (data.status == "success") {
+      setSaved("saved");
+    } else {
+      setSaved("error");
+    }
+  };
   return (
     <aside className="layout__aside">
       <header className="aside__header">
@@ -68,27 +94,52 @@ export const Sidebar = () => {
           </div>
         </div>
 
-        <div className="aside__container-form">
+        {saved === "saved" ? (
+          <strong className="alert alert-success">
+            Publicada correctamente !!{" "}
+          </strong>
+        ) : (
+          ""
+        )}
+
+        {saved === "error" ? (
+          <strong className="alert alert-danger">
+            No se ha publicado nada !!
+          </strong>
+        ) : (
+          ""
+        )}
+
+        <div className="aside__container-form" onSubmit={savePublication}>
           <form className="container-form__form-post">
             <div className="form-post__inputs">
-              <label htmlFor="post" className="form-post__label">
+              <label htmlFor="text" className="form-post__label">
                 ¿Que estas pesando hoy?
               </label>
-              <textarea name="post" className="form-post__textarea"></textarea>
+              <textarea
+                name="text"
+                className="form-post__textarea"
+                onChange={changed}
+              />
             </div>
 
             <div className="form-post__inputs">
-              <label htmlFor="image" className="form-post__label">
+              <label htmlFor="file" className="form-post__label">
                 Sube tu foto
               </label>
-              <input type="file" name="image" className="form-post__image" />
+              <input
+                type="file"
+                name="file0"
+                id="file"
+                className="form-post__image"
+              />
             </div>
 
             <input
               type="submit"
               value="Enviar"
               className="form-post__btn-submit"
-              disabled
+             
             />
           </form>
         </div>
