@@ -171,6 +171,9 @@ body {
   line-height: 1.5;
   cursor: pointer;
 }
+.content__button--rigth {
+  float: right;
+}
 
 .content__button:hover,
 .content__btn-more-post:hover {
@@ -247,7 +250,6 @@ body {
   background-color: var(--color-background-btn-success);
   border-color: var(--color-border-btn-success);
 }
-
 
 .post__button:hover {
   background-color: var(--color-background-btn-delete-hover);
