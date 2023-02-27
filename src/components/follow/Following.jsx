@@ -33,12 +33,18 @@ export const Following = () => {
       }
     );
     const data = await request.json();
+    let cleanUsers = [];
+    //Recorrer y limpiar follow para quedarme con followed
+    data.follows.forEach((follow) => {
+      cleanUsers = [...cleanUsers, follow.followed];
+    });
+    data.users = cleanUsers;
 
     //Crear un estado para poder listarlos
-    if (data.follows && data.status == "success") {
-      let newUser = data.follows;
+    if (data.users && data.status == "success") {
+      let newUser = data.users;
       if (users.length >= 1) {
-        newUser = [...users, ...data.follows];
+        newUser = [...users, ...data.users];
       }
       setUser(newUser);
       setFollowind(data.user_following);
@@ -47,7 +53,7 @@ export const Following = () => {
 
     //Paginacion
     // console.log(data);
-    if (users.length >= data.total - data.follows.length) {
+    if (users.length >= data.total - data.users.length) {
       setMore(false);
     }
   };
