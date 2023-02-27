@@ -1,24 +1,50 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import avatar from "../../assets/img/user.png";
 import { getProfile } from "../../helpers/getProfile";
+import { Global } from "../../helpers/Glogal";
 
 export const Profile = () => {
   const [user, setUser] = useState({});
+  const [counters, setCounters] = useState({});
   const params = useParams();
   useEffect(() => {
     getProfile(params.userId, setUser);
-  });
+    getCounter();
+  }, []);
+  const getCounter = async () => {
+    const request = await fetch(Global.url + "user/counters/" + params.userId, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: localStorage.getItem("token"),
+      },
+    });
+    const data = await request.json();
+    if (data.following) {
+      setCounters(data);
+    }
+  };
   return (
     <>
       <header className="aside__profile-info">
         <div className="profile-info__general-info">
           <div className="general-info__container-avatar">
-            <img
-              src={avatar}
-              className="container-avatar__img"
-              alt="Foto de perfil"
-            />
+            {user.image != "default.png" && (
+              <img
+                src={Global.url + "user/avatar/" + user.image}
+                className="container-avatar__img"
+                alt="Foto de perfil"
+              />
+            )}
+
+            {user.image == "default.png" && (
+              <img
+                src={avatar}
+                className="container-avatar__img"
+                alt="Foto de perfil"
+              />
+            )}
           </div>
 
           <div className="general-info__container-names">
@@ -37,23 +63,29 @@ export const Profile = () => {
 
         <div className="profile-info__stats">
           <div className="stats__following">
-            <a href="#" className="following__link">
+            <Link
+              to={"/social/siguiendo/" + user._id}
+              className="following__link"
+            >
               <span className="following__title">Siguiendo</span>
-              <span className="following__number">10</span>
-            </a>
+              <span className="following__number">{counters.following}</span>
+            </Link>
           </div>
           <div className="stats__following">
-            <a href="#" className="following__link">
+            <Link
+              to={"/social/siguidores/" + user._id}
+              className="following__link"
+            >
               <span className="following__title">Seguidores</span>
-              <span className="following__number">13</span>
-            </a>
+              <span className="following__number">{counters.followed}</span>
+            </Link>
           </div>
 
           <div className="stats__following">
-            <a href="#" className="following__link">
+            <Link to={"/social/perfil/" + user._id} className="following__link">
               <span className="following__title">Publicaciones</span>
-              <span className="following__number">17</span>
-            </a>
+              <span className="following__number">{counters.publications}</span>
+            </Link>
           </div>
         </div>
       </header>

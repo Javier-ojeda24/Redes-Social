@@ -2,6 +2,7 @@ import React from "react";
 import { Global } from "../../helpers/Glogal";
 import avatar from "../../assets/img/user.png";
 import useAuth from "../../hooks/useAuth";
+import { Link } from "react-router-dom";
 
 export const UserList = ({
   users,
@@ -65,7 +66,10 @@ export const UserList = ({
             <article className="posts__post" key={user._id}>
               <div className="post__container">
                 <div className="post__image-user">
-                  <a href="#" className="post__image-link">
+                  <Link
+                    to={"/social/perfil/" + user._id}
+                    className="post__image-link"
+                  >
                     {user.image != "default.png" && (
                       <img
                         src={Global.url + "user/avatar/" + user.image}
@@ -81,18 +85,24 @@ export const UserList = ({
                         alt="Foto de perfil"
                       />
                     )}
-                  </a>
+                  </Link>
                 </div>
 
                 <div className="post__body">
                   <div className="post__user-info">
-                    <a href="#" className="user-info__name">
+                    <Link
+                      to={"/social/perfil/" + user._id}
+                      className="user-info__name"
+                    >
                       {user.name} {user.surname}
-                    </a>
+                    </Link>
                     <span className="user-info__divider"> | </span>
-                    <a href="#" className="user-info__create-date">
+                    <Link
+                      to={"/social/perfil/" + user._id}
+                      className="user-info__create-date"
+                    >
                       {user.created_at}
-                    </a>
+                    </Link>
                   </div>
 
                   <h4 className="post__content">{user.bio}</h4>
