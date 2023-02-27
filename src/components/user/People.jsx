@@ -69,8 +69,22 @@ export const People = () => {
 
   const unfollow = async (userId) => {
     //peticion al back para borrar follow
+    const request = await fetch(Global.url + "follow/unfollow/" + userId, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: localStorage.getItem("token"),
+      },
+    });
+    const data = await request.json();
     //Cuando esta todo correcto
-    //Actualizar el estado de following, filtrando  los datos para eliminar antiguo userId que acabo de dejar de seguir
+    if (data.status == "success") {
+      //Actualizar el estado de following, filtrando  los datos para eliminar antiguo userId que acabo de dejar de seguir
+      let filterFollo = following.filter(
+        (followingUserId) => userId !== followingUserId
+      );
+      setFollowind(filterFollo);
+    }
   };
   return (
     <>
