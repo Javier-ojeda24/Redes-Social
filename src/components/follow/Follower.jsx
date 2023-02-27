@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { Global } from "../../helpers/Glogal";
 import { UserList } from "../user/UserList";
 
-export const Follower = () => {
+export const Follower= () => {
   const [users, setUser] = useState([]);
   const [pages, setPages] = useState(1);
   const [more, setMore] = useState(true);
   const [loading, setLoading] = useState(true);
   const [following, setFollowind] = useState([]);
+  const params = useParams();
 
   useEffect(() => {
     getUser(1);
@@ -15,15 +17,29 @@ export const Follower = () => {
 
   const getUser = async (nextPage = 1) => {
     setLoading(true);
+
+    //Sacar user id de la url
+    const userId = params.userId;
+
     //Peticion para sacar usuarios
-    const request = await fetch(Global.url + "user/list/" + nextPage, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: localStorage.getItem("token"),
-      },
-    });
+    const request = await fetch(
+      Global.url + "follow/followers/" + userId + "/" + nextPage,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: localStorage.getItem("token"),
+        },
+      }
+    );
     const data = await request.json();
+
+    //Recorrer y limpiar follow para quedarme con followed
+    let cleanUsers = [];
+    data.follows.forEach((follow) => {
+      cleanUsers = [...cleanUsers, follow.user];
+    });
+    data.users = cleanUsers;
 
     //Crear un estado para poder listarlos
     if (data.users && data.status == "success") {
@@ -46,7 +62,7 @@ export const Follower = () => {
   return (
     <>
       <header className="content__header">
-        <h1 className="content__title">Gente</h1>
+        <h1 className="content__title">Seguidores </h1>
       </header>
 
       <UserList

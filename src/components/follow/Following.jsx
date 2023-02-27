@@ -33,8 +33,9 @@ export const Following = () => {
       }
     );
     const data = await request.json();
-    let cleanUsers = [];
+
     //Recorrer y limpiar follow para quedarme con followed
+    let cleanUsers = [];
     data.follows.forEach((follow) => {
       cleanUsers = [...cleanUsers, follow.followed];
     });
