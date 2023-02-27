@@ -134,7 +134,7 @@ export const Sidebar = () => {
         )}
 
         <div className="aside__container-form" onSubmit={savePublication}>
-          <form className="container-form__form-post">
+          <form className="container-form__form-post" id="publication-form">
             <div className="form-post__inputs">
               <label htmlFor="text" className="form-post__label">
                 ¿Que estas pesando hoy?
