@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { getProfile } from "../../helpers/getProfile";
 import { Global } from "../../helpers/Glogal";
 import { UserList } from "../user/UserList";
 
-export const Follower= () => {
+export const Follower = () => {
   const [users, setUser] = useState([]);
   const [pages, setPages] = useState(1);
   const [more, setMore] = useState(true);
   const [loading, setLoading] = useState(true);
   const [following, setFollowind] = useState([]);
+  const [profile, setProfile] = useState({});
   const params = useParams();
 
   useEffect(() => {
     getUser(1);
+    getProfile(params.userId, setProfile);
   }, []);
 
   const getUser = async (nextPage = 1) => {
@@ -62,7 +65,7 @@ export const Follower= () => {
   return (
     <>
       <header className="content__header">
-        <h1 className="content__title">Seguidores </h1>
+        <h1 className="content__title">Seguidores de {profile.name} </h1>
       </header>
 
       <UserList

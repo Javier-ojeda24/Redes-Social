@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Global } from "../../helpers/Glogal";
 import { UserList } from "../user/UserList";
+import { getProfile } from "../../helpers/getProfile";
 
 export const Following = () => {
   const [users, setUser] = useState([]);
@@ -9,12 +10,14 @@ export const Following = () => {
   const [more, setMore] = useState(true);
   const [loading, setLoading] = useState(true);
   const [following, setFollowind] = useState([]);
+  const [profile, setProfile] = useState({});
   const params = useParams();
 
   useEffect(() => {
     getUser(1);
+    getProfile(params.userId, setProfile);
   }, []);
-
+  const token = localStorage.getItem("token");
   const getUser = async (nextPage = 1) => {
     setLoading(true);
 
@@ -28,7 +31,7 @@ export const Following = () => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: localStorage.getItem("token"),
+          Authorization: token,
         },
       }
     );
@@ -53,7 +56,7 @@ export const Following = () => {
     }
 
     //Paginacion
-    // console.log(data);
+
     if (users.length >= data.total - data.users.length) {
       setMore(false);
     }
@@ -62,7 +65,7 @@ export const Following = () => {
   return (
     <>
       <header className="content__header">
-        <h1 className="content__title">Usuarios que sigue </h1>
+        <h1 className="content__title">Usuarios que sigues {profile.name}</h1>
       </header>
 
       <UserList
