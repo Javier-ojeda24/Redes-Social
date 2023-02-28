@@ -98,6 +98,7 @@ export const Profile = () => {
           <div className="general-info__container-names">
             <div className="container-names__name">
               <h1>
+              
                 {user.name} {user.surname}
               </h1>
               {user._id !== auth._id &&
