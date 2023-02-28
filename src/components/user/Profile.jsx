@@ -3,19 +3,30 @@ import { Link, useParams } from "react-router-dom";
 import avatar from "../../assets/img/user.png";
 import { getProfile } from "../../helpers/getProfile";
 import { Global } from "../../helpers/Glogal";
+import useAuth from "../../hooks/useAuth";
 
 export const Profile = () => {
   const [user, setUser] = useState({});
   const [counters, setCounters] = useState({});
+  const [iFollow, setIFollow] = useState(false);
   const params = useParams();
+  const { auth } = useAuth();
+
   useEffect(() => {
-    getProfile(params.userId, setUser);
+    getDataUser();
     getCounter();
   }, []);
+
   useEffect(() => {
-    getProfile(params.userId, setUser);
+    getDataUser();
     getCounter();
   }, [params]);
+
+  const getDataUser = async () => {
+    let dataUser = await getProfile(params.userId, setUser);
+    if (dataUser.following && dataUser.following._id) setIFollow(true);
+  };
+
   const getCounter = async () => {
     const request = await fetch(Global.url + "user/counters/" + params.userId, {
       method: "GET",
@@ -56,9 +67,16 @@ export const Profile = () => {
               <h1>
                 {user.name} {user.surname}
               </h1>
-              <button className="content__button content__button--rigth">
-                Seguir
-              </button>
+              {user._id !== auth._id &&
+                (iFollow ? (
+                  <button className="content__button content__button--rigth post__button">
+                    Dejar de seguir
+                  </button>
+                ) : (
+                  <button className="content__button content__button--rigth">
+                    Seguir
+                  </button>
+                ))}
             </div>
             <h2 className="container-names__nickname">{user.nick}</h2>
             <p>{user.bio}</p>
@@ -93,7 +111,7 @@ export const Profile = () => {
             <Link to={"/social/perfil/" + user._id} className="following__link">
               <span className="following__title">Publicaciones</span>
               <span className="following__number">
-                {counters.publications >= 1 ? counters.publications : 0 }
+                {counters.publications >= 1 ? counters.publications : 0}
               </span>
             </Link>
           </div>
