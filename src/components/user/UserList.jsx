@@ -15,6 +15,7 @@ export const UserList = ({
   setPages,
 }) => {
   const { auth } = useAuth();
+  
   const follow = async (userId) => {
     //peticion al back para guardar follow
     const request = await fetch(Global.url + "follow/save", {

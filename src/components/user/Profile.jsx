@@ -40,6 +40,39 @@ export const Profile = () => {
       setCounters(data);
     }
   };
+  const follow = async (userId) => {
+    //peticion al back para guardar follow
+    const request = await fetch(Global.url + "follow/save", {
+      method: "POST",
+      body: JSON.stringify({ followed: userId }),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: localStorage.getItem("token"),
+      },
+    });
+    const data = await request.json();
+    //Cuando esta todo correcto
+    if (data.status === "success") {
+      setIFollow(true);
+    }
+  };
+
+  const unfollow = async (userId) => {
+    //peticion al back para borrar follow
+    const request = await fetch(Global.url + "follow/unfollow/" + userId, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: localStorage.getItem("token"),
+      },
+    });
+    const data = await request.json();
+    //Cuando esta todo correcto
+    if (data.status == "success") {
+      //Actualizar el estado de following, filtrando  los datos para eliminar antiguo userId que acabo de dejar de seguir
+      setIFollow(false);
+    }
+  };
   return (
     <>
       <header className="aside__profile-info">
@@ -69,11 +102,17 @@ export const Profile = () => {
               </h1>
               {user._id !== auth._id &&
                 (iFollow ? (
-                  <button className="content__button content__button--rigth post__button">
+                  <button
+                    onClick={() => unfollow(user._id)}
+                    className="content__button content__button--rigth post__button"
+                  >
                     Dejar de seguir
                   </button>
                 ) : (
-                  <button className="content__button content__button--rigth">
+                  <button
+                    onClick={() => follow(user._id)}
+                    className="content__button content__button--rigth"
+                  >
                     Seguir
                   </button>
                 ))}
