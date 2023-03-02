@@ -9,17 +9,20 @@ export const Profile = () => {
   const [user, setUser] = useState({});
   const [counters, setCounters] = useState({});
   const [iFollow, setIFollow] = useState(false);
+  const [publicacion, setPublicacion] = useState({});
   const params = useParams();
   const { auth } = useAuth();
 
   useEffect(() => {
     getDataUser();
     getCounter();
+    getPublication();
   }, []);
 
   useEffect(() => {
     getDataUser();
     getCounter();
+    getPublication();
   }, [params]);
 
   const getDataUser = async () => {
@@ -73,6 +76,23 @@ export const Profile = () => {
       setIFollow(false);
     }
   };
+  const getPublication = async (nextPage = 1) => {
+    const request = await fetch(
+      Global.url + "publication/user/" + params.userId + "/" + nextPage,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: localStorage.getItem("token"),
+        },
+      }
+    );
+    const data = await request.json();
+
+    if (data.status == "success") {
+      setPublicacion(data.publications);
+    }
+  };
   return (
     <>
       <header className="aside__profile-info">
@@ -98,7 +118,6 @@ export const Profile = () => {
           <div className="general-info__container-names">
             <div className="container-names__name">
               <h1>
-              
                 {user.name} {user.surname}
               </h1>
               {user._id !== auth._id &&
@@ -159,46 +178,69 @@ export const Profile = () => {
       </header>
 
       <div className="content__posts">
-        <article className="posts__post">
-          <div className="post__container">
-            <div className="post__image-user">
-              <a href="#" className="post__image-link">
-                <img
-                  src={avatar}
-                  className="post__user-image"
-                  alt="Foto de perfil"
-                />
-              </a>
-            </div>
+        
+        {/* {publicacion.map((publication) => {
+          return (
+            <article className="posts__post" key={publication.user._id}>
+              <div className="post__container">
+                <div className="post__image-user">
+                  <Link
+                    to={"/social/perfil/" + publication.user._id}
+                    className="post__image-link"
+                  >
+                    {publication.user.image != "default.png" && (
+                      <img
+                        src={
+                          Global.url + "user/avatar/" + publication.user.image
+                        }
+                        className="post__user-image"
+                        alt="Foto de perfil"
+                      />
+                    )}
 
-            <div className="post__body">
-              <div className="post__user-info">
-                <a href="#" className="user-info__name">
-                  Victor Robles
-                </a>
-                <span className="user-info__divider"> | </span>
-                <a href="#" className="user-info__create-date">
-                  Hace 1 hora
-                </a>
+                    {publication.user.image == "default.png" && (
+                      <img
+                        src={avatar}
+                        className="post__user-image"
+                        alt="Foto de perfil"
+                      />
+                    )}
+                  </Link>
+                </div>
+
+                <div className="post__body">
+                  <div className="post__user-info">
+                    <a href="#" className="user-info__name">
+                      {publication.user.name} {publication.user.surname}
+                    </a>
+                    <span className="user-info__divider"> | </span>
+                    <a href="#" className="user-info__create-date">
+                      {publication.created_at}
+                    </a>
+                  </div>
+
+                  <h4 className="post__content">{publication.text}</h4>
+                </div>
               </div>
 
-              <h4 className="post__content">Hola, buenos dias.</h4>
-            </div>
-          </div>
-
-          <div className="post__buttons">
-            <a href="#" className="post__button">
-              <i className="fa-solid fa-trash-can"></i>
-            </a>
-          </div>
-        </article>
+              {auth._id == publication.user._id && (
+                <div className="post__buttons">
+                  <a href="#" className="post__button">
+                    <i className="fa-solid fa-trash-can"></i>
+                  </a>
+                </div>
+              )}
+            </article>
+          );
+        })} */}
       </div>
 
-      <div className="content__container-btn">
+      {/* <div className="content__container-btn">
         <button className="content__btn-more-post">
           Ver mas publicaciones
         </button>
-      </div>
+      </div> */}
+      <br />
     </>
   );
 };
